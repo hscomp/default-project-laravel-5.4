@@ -1,0 +1,1 @@
+<link href="{{ asset('css/plugins/sweetalert2/sweetalert2.css') }}" rel="stylesheet">
