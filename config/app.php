@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Laravel',
+    'name' => 'HsComputers - Default Project 1.0',
 
     /*
     |--------------------------------------------------------------------------

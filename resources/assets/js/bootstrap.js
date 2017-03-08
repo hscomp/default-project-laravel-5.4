@@ -17,6 +17,7 @@ require('bootstrap-sass');
  * and simple, leaving you to focus on building your next great project.
  */
 
+//window.Vue = require('vue');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -34,11 +35,11 @@ window.axios.defaults.headers.common = {
 /**
  * Sweet alert dialog.
  */
-// window.swal = require('sweetalert2');
+window.swal = require('sweetalert2');
 
 /**
  * Vex dialog.
  */
-// window.vex = require('vex-js');
-// vex.registerPlugin(require('vex-dialog'));
-// vex.defaultOptions.className = 'vex-theme-os';
+window.vex = require('vex-js');
+vex.registerPlugin(require('vex-dialog'));
+vex.defaultOptions.className = 'vex-theme-os';

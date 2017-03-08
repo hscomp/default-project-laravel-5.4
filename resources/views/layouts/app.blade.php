@@ -3,13 +3,11 @@
 <head>
     @include('layouts.meta')
 
-    <title>{{ config('app.name', 'Project name') }}</title>
+    <title>{{ config('app.name') }}</title>
 
     @yield('before-stylesheets')
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-    @include('layouts.core-stylesheets')
 
     @yield('after-stylesheets')
 
@@ -83,8 +81,6 @@
     @yield('before_scripts')
 
     <script src="{{ asset('js/app.js') }}"></script>
-
-    @include('layouts.core-scripts')
 
     @yield('after_scripts')
 
