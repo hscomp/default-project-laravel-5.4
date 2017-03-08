@@ -19,6 +19,7 @@ require('./bootstrap');
 //     el: '#app'
 // });
 
-$(document).ready(function() {
-    swal('Hi from webpack!');
-});
+require('./hscomponents/project');
+require('./hscomponents/flashMessenger/flashMessenger');
+
+require('./hscomponents/promiseHack/promise');
