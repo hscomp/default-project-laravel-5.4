@@ -24,6 +24,15 @@ Install Composer dependencies:
 $ composer install
 ```
 
+Install NPM dependencies (only on local machine):
+
+```shell
+$ npm install --no-bin-links
+$ npm install --no-bin-links
+$ npm rebuild node-sass
+$ npm rebuild
+```
+
 Create and save your .env file in project root.
 ```shell
 .env
