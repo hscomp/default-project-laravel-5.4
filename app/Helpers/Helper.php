@@ -8,6 +8,13 @@ use JavaScript;
 
 class Helper
 {
+    public static function clock()
+    {
+        if (config('app.debug')) {
+            clock(func_get_args());
+        }
+    }
+
     public static function getPhoneValidation()
     {
         return [

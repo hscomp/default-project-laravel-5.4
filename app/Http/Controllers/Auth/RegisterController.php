@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Events\UserRegistered;
 use App\Forms\UserRegisterForm;
+use App\Helpers\Helper;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Services\Auth\EmailActivationService;
@@ -75,6 +76,8 @@ class RegisterController extends BaseController
         if (config('registration.email_activation.user')) {
             $activationService->createActivation($user);
         }
+
+        Helper::clock(['user' => $user]);
 
         $this->sendAlert(trans('responsemessages.registration.user.registration_success_with_activation_link'));
 
