@@ -30,11 +30,11 @@ class UserRegisterRequest extends FormRequest
                 return [];
             }
             case 'POST': {
-                return (new UserRegisterForm())->getRules('create');
+                return (new UserRegisterForm('create'))->getRules();
             }
             case 'PUT':
             case 'PATCH': {
-                return (new UserRegisterForm())->getRules('edit');
+                return (new UserRegisterForm('edit'))->getRules();
             }
             default:
                 break;

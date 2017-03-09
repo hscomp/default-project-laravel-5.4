@@ -13,7 +13,7 @@ return [
     */
 
     'email_activation' => [
-        'user' => env('REGISTRATION_EMAIL_ACTIVATION_USER', false)
+        'user' => env('REGISTRATION_EMAIL_ACTIVATION_USER', true)
     ],
 
     /*
@@ -27,6 +27,6 @@ return [
     */
 
     'instant_login' => [
-        'user' => env('REGISTRATION_INSTANT_LOGIN_USER', true)
+        'user' => env('REGISTRATION_INSTANT_LOGIN_USER', false)
     ],
 ];

@@ -47,13 +47,12 @@ class RegisterController extends BaseController
     /**
      * Show the application registration form.
      *
+     * @param UserRegisterForm $userRegisterForm
      * @return \Illuminate\Http\Response
      */
     public function showRegistrationForm()
     {
-        $userRegisterForm = (new UserRegisterForm)
-            ->setUrl(route('auth.registerAction'))
-            ->setSubmitButtonText(trans('words.create_account'));
+        $userRegisterForm = new UserRegisterForm('create');
 
         return view('auth.register', compact('userRegisterForm'));
     }
@@ -83,12 +82,14 @@ class RegisterController extends BaseController
             $user->save();
         }
 
-        if (!config('registration.email_activation.user') && config('registration.instant_login.user')) {
-            $this->guard()->login($user);
-
-            $this->sendAlert(trans('responsemessages.registration.user.registration_success'));
-        } else {
+        if (config('registration.email_activation.user')) {
             $this->sendAlert(trans('responsemessages.registration.user.registration_success_with_activation_link'));
+        } else {
+            $this->sendAlert(trans('responsemessages.registration.user.registration_success'));
+        }
+
+        if (config('registration.instant_login.user') && !config('registration.email_activation.user')) {
+            $this->guard()->login($user);
         }
 
         event(new UserRegistered($user));

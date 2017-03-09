@@ -12,13 +12,17 @@
                      * @var \App\Forms\UserRegisterForm $userRegisterForm
                      */
                     ?>
-                    @if ($userRegisterForm->hasRenderFields('create'))
-                        {!! $userRegisterForm->render('create') !!}
+                    @if ($userRegisterForm->hasRenderFields())
+                        {!! $userRegisterForm->render() !!}
                     @else
                         <div>
                             {{ trans('phrases.this_form_contains_no_entries') }}
                         </div>
                     @endif
+
+                    <div clo =6{{}}</div>
+                    <div clo =6</div>
+
                 </div>
             </div>
         </div>

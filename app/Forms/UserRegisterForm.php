@@ -11,42 +11,86 @@ class UserRegisterForm extends BaseForm
      */
     public function fields()
     {
-        return [
+        $fields = [
             'first_name' => [
-                'fieldType'         => 'textField',
+                'formType'          => 'create|edit',
+                'fieldComponent'    => 'textField',
+                'fieldType'         => 'text',
                 'label'             => trans('words.first_name'),
-                'create'            => true,
-                'edit'              => false,
+                'attributes'        => ['class' => 'form-control petr marie', 'data-test' => 'ok'],
+                'parentClass'       => 'col-md-6',
+                'parentAttributes'  => ['jmeno' => 'zavicak'],
                 'rules'             => 'required|min:2|max:50|name_characters',
             ],
             'last_name' => [
-                'fieldType'         => 'textField',
+                'formType'          => 'create|edit',
+                'fieldComponent'    => 'textField',
+                'fieldType'         => 'text',
                 'label'             => trans('words.last_name'),
-                'create'            => true,
-                'edit'              => false,
+                'attributes'        => ['class' => 'form-control petr marie', 'data-test' => 'ok'],
+                'parentClass'       => 'col-md-6',
+                'parentAttributes'  => ['jmeno' => 'zavicak'],
                 'rules'             => 'required|min:2|max:50|name_characters',
             ],
             'email' => [
-                'fieldType'         => 'textField',
+                'formType'          => 'create',
+                'fieldComponent'    => 'textField',
+                'fieldType'         => 'text',
                 'label'             => trans('words.email'),
-                'create'            => true,
-                'edit'              => false,
                 'rules'             => 'required|min:3|max:255|email|unique:users',
             ],
             'password' => [
-                'fieldType'         => 'passwordField',
+                'formType'          => 'create|edit',
+                'fieldComponent'    => 'passwordField',
+                'fieldType'         => 'password',
                 'label'             => trans('words.password'),
-                'create'            => true,
-                'edit'              => true,
                 'rules'             => 'required|min:5|max:30|confirmed',
             ],
             'password_confirmation' => [
-                'fieldType'         => 'passwordField',
+                'formType'          => 'create|edit',
+                'fieldComponent'    => 'passwordField',
+                'fieldType'         => 'password',
                 'label'             => trans('words.password_confirmation'),
-                'create'            => true,
-                'edit'              => true,
             ],
+        ];
+
+        return $fields;
+    }
+
+    public function url()
+    {
+        return [
+            'create' => route('auth.registerAction'),
+            'edit' => route('auth.registerAction'),
         ];
     }
 
+    public function formClass()
+    {
+        return [
+            'create' => 'form-horizontal',
+            'edit' => 'form-horizontal',
+        ];
+    }
+
+    public function formAttributes()
+    {
+        return [
+            'edit' => ['jo', 'ne', 'pole' => 261],
+            'create' => ['form-horizontal'],
+        ];
+    }
+
+    public function submitButtonText($formType)
+    {
+        return [
+            'create' => trans('words.create_account'),
+            'edit' => trans('words.create_account'),
+        ];
+    }
+
+    public function dataRemote($formType)
+    {
+        return false;
+    }
 }
