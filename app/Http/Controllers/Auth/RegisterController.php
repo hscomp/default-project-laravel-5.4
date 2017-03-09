@@ -10,6 +10,7 @@ use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Services\Auth\EmailActivationService;
 use App\Services\Auth\RegisterService;
 use App\Traits\Notifiable;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Support\Facades\Auth;
 
@@ -73,17 +74,24 @@ class RegisterController extends BaseController
     ) {
         $user = $registerService->register($request->all());
 
-        if (config('registration.email_activation.user')) {
-            $activationService->createActivation($user);
-        }
-
         Helper::clock(['user' => $user]);
 
-        $this->sendAlert(trans('responsemessages.registration.user.registration_success_with_activation_link'));
+        if (config('registration.email_activation.user')) {
+            $activationService->createActivation($user);
+        } else {
+            $user->activated_at = Carbon::now();
+            $user->save();
+        }
+
+        if (!config('registration.email_activation.user') && config('registration.instant_login.user')) {
+            $this->guard()->login($user);
+
+            $this->sendAlert(trans('responsemessages.registration.user.registration_success'));
+        } else {
+            $this->sendAlert(trans('responsemessages.registration.user.registration_success_with_activation_link'));
+        }
 
         event(new UserRegistered($user));
-
-        //$this->guard()->login($user);
 
         return redirect($this->redirectPath());
     }
