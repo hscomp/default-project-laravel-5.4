@@ -29,9 +29,9 @@ class FormServiceProvider extends ServiceProvider
 
     public function registerFormCompoments()
     {
-        Form::component('textField', 'components.form.text', ['name', 'label', 'value' => null, 'attributes' => [], 'parentClass' => [], 'parentAttributes' => []]);
-        Form::component('textareaField', 'components.form.textarea', ['name', 'label', 'value' => null, 'attributes' => [], 'parentClass' => [], 'parentAttributes' => []]);
-        Form::component('passwordField', 'components.form.password', ['name', 'label', 'attributes' => [], 'parentClass' => [], 'parentAttributes' => []]);
-        Form::component('submitField', 'components.form.submit', ['label', 'attributes' => [], 'parentClass' => [], 'parentAttributes' => []]);
+        Form::component('textField', 'components.form.text', ['name', 'label', 'value' => null, 'attributes' => [], 'fieldRootClasses' => [], 'fieldRootAttributes' => []]);
+        Form::component('textareaField', 'components.form.textarea', ['name', 'label', 'value' => null, 'attributes' => [], 'fieldRootClasses' => [], 'fieldRootAttributes' => []]);
+        Form::component('passwordField', 'components.form.password', ['name', 'label', 'attributes' => [], 'fieldRootClasses' => [], 'fieldRootAttributes' => []]);
+        Form::component('submitField', 'components.form.submit', ['label', 'attributes' => [], 'fieldRootClasses' => [], 'fieldRootAttributes' => []]);
     }
 }

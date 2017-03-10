@@ -10,22 +10,28 @@ abstract class BaseForm implements ModelFormInterface
 
     private $url;
 
+    private $formClasses = [];
+
+    private $formAttributes = [];
+
+    private $commonFieldRootClasses = [];
+
+    private $commonFieldRootAttributes = [];
+
     private $submitButtonText;
-
-    private $formClass = 'form-horizontal';
-
-    private $formAttributes = ['data-remote'];
 
     private $dataRemote = false;
 
     public function __construct($formType = 'create')
     {
         $this->setFormType($formType)
-            ->setUrl($this->url($formType))
-            ->setFormClass($this->formClass($formType))
-            ->setFormAttributes($this->formAttributes($formType))
-            ->setSubmitButtonText($this->submitButtonText($formType))
-            ->setDataRemote($this->dataRemote($formType));
+            ->setUrl($this->url())
+            ->setFormClasses($this->formClasses())
+            ->setFormAttributes($this->formAttributes())
+            ->setCommonFieldRootClasses($this->commonFieldRootClasses())
+            ->setCommonFieldRootAttributes($this->commonFieldRootAttributes())
+            ->setSubmitButtonText($this->submitButtonText())
+            ->setDataRemote($this->dataRemote());
     }
 
     private function setFormType($formType)
@@ -52,16 +58,16 @@ abstract class BaseForm implements ModelFormInterface
         return $this->url;
     }
 
-    public function setFormClass($formClass)
+    public function setFormClasses($formClasses)
     {
-        $this->formClass = $this->parseValueByFormType($formClass);
+        $this->formClasses = $this->parseValueByFormType($formClasses);
 
         return $this;
     }
 
-    public function getFormClass()
+    public function getFormClasses()
     {
-        return $this->formClass;
+        return $this->formClasses;
     }
 
     public function setFormAttributes($attributes)
@@ -74,6 +80,30 @@ abstract class BaseForm implements ModelFormInterface
     public function getFormAttributes()
     {
         return $this->formAttributes;
+    }
+
+    public function setCommonFieldRootClasses($commonFieldRootClasses)
+    {
+        $this->commonFieldRootClasses = $this->parseValueByFormType($commonFieldRootClasses);
+
+        return $this;
+    }
+
+    public function getCommonFieldRootClasses()
+    {
+        return $this->commonFieldRootClasses;
+    }
+
+    public function setCommonFieldRootAttributes($commonFieldRootAttributes)
+    {
+        $this->commonFieldRootAttributes = $this->parseValueByFormType($commonFieldRootAttributes);
+
+        return $this;
+    }
+
+    public function getCommonFieldRootAttributes()
+    {
+        return $this->commonFieldRootAttributes;
     }
 
     public function setSubmitButtonText($submitButtonText)
@@ -90,7 +120,11 @@ abstract class BaseForm implements ModelFormInterface
 
     public function setDataRemote($dataRemote)
     {
-        $this->dataRemote = $this->parseValueByFormType($dataRemote);;
+        $this->dataRemote = $this->parseValueByFormType($dataRemote);
+
+        if ($dataRemote) {
+            $this->formAttributes['data-remote'] = 'data-remote';
+        }
 
         return $this;
     }
@@ -107,7 +141,7 @@ abstract class BaseForm implements ModelFormInterface
         $rules = [];
 
         foreach ($this->fields() as $rule => $data) {
-            if (isset($data[$this->formType]) && $data[$this->formType]) {
+            if (in_array($this->formType, explode('|', $data['formType']))) {
                 $rules[$rule] = isset($data['rules']) ? $data['rules'] : [];
             }
         }
@@ -125,10 +159,11 @@ abstract class BaseForm implements ModelFormInterface
                     'fieldComponent' => $this->parseValueByFormType($data['fieldComponent']),
                     'fieldType' => $this->parseValueByFormType($data['fieldType']),
                     'name' => $rule,
-                    'label' => $this->parseValueByFormType($data['label']),
+                    'label' => isset($data['label']) ? $this->parseValueByFormType($data['label']) : null,
+                    'placeholder' => isset($data['placeholder']) ? $this->parseValueByFormType($data['placeholder']) : null,
                     'attributes' => isset($data['attributes']) ? $this->parseValueByFormType($data['attributes']) : [],
-                    'parentClass' => isset($data['parentClass']) ? $this->parseValueByFormType($data['parentClass']) : '',
-                    'parentAttributes' => isset($data['parentAttributes']) ? $this->parseValueByFormType($data['parentAttributes']) : [],
+                    'fieldRootClasses' => array_unique(array_merge($this->commonFieldRootClasses, isset($data['fieldRootClasses']) ? $this->parseValueByFormType($data['fieldRootClasses']) : [])),
+                    'fieldRootAttributes' => array_unique(array_merge($this->commonFieldRootAttributes, isset($data['fieldRootAttributes']) ? $this->parseValueByFormType($data['fieldRootAttributes']) : [])),
                 ];
             }
         }
@@ -159,9 +194,9 @@ abstract class BaseForm implements ModelFormInterface
         return [];
     }
 
-    public function formClass()
+    public function formClasses()
     {
-        return '';
+        return [];
     }
 
     public function formAttributes()
@@ -169,12 +204,12 @@ abstract class BaseForm implements ModelFormInterface
         return [];
     }
 
-    public function submitButtonText($formType)
+    public function submitButtonText()
     {
         return '';
     }
 
-    public function dataRemote($formType)
+    public function dataRemote()
     {
         return false;
     }

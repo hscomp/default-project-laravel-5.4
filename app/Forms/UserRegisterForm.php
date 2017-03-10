@@ -13,44 +13,41 @@ class UserRegisterForm extends BaseForm
     {
         $fields = [
             'first_name' => [
-                'formType'          => 'create|edit',
-                'fieldComponent'    => 'textField',
-                'fieldType'         => 'text',
-                'label'             => trans('words.first_name'),
-                'attributes'        => ['class' => 'form-control petr marie', 'data-test' => 'ok'],
-                'parentClass'       => 'col-md-6',
-                'parentAttributes'  => ['jmeno' => 'zavicak'],
-                'rules'             => 'required|min:2|max:50|name_characters',
+                'formType'              => 'create|edit',
+                'fieldComponent'        => 'textField',
+                'fieldType'             => 'text',
+                'label'                 => trans('words.first_name'),
+                'attributes'            => ['class' => 'form-control custom-class', 'placeholder' => 'Vložte jméno'],
+                'fieldRootClasses'      => ['col-md-12', 'custom-class'],
+                'fieldRootAttributes'   => ['jmeno' => 'zavicak'],
+                'rules'                 => 'required|min:2|max:50|name_characters',
             ],
             'last_name' => [
-                'formType'          => 'create|edit',
-                'fieldComponent'    => 'textField',
-                'fieldType'         => 'text',
-                'label'             => trans('words.last_name'),
-                'attributes'        => ['class' => 'form-control petr marie', 'data-test' => 'ok'],
-                'parentClass'       => 'col-md-6',
-                'parentAttributes'  => ['jmeno' => 'zavicak'],
-                'rules'             => 'required|min:2|max:50|name_characters',
+                'formType'              => 'create|edit',
+                'fieldComponent'        => 'textField',
+                'fieldType'             => 'text',
+                'label'                 => trans('words.last_name'),
+                'rules'                 => 'required|min:2|max:50|name_characters',
             ],
             'email' => [
-                'formType'          => 'create',
-                'fieldComponent'    => 'textField',
-                'fieldType'         => 'text',
-                'label'             => trans('words.email'),
-                'rules'             => 'required|min:3|max:255|email|unique:users',
+                'formType'              => 'create',
+                'fieldComponent'        => 'textField',
+                'fieldType'             => 'text',
+                'label'                 => trans('words.email'),
+                'rules'                 => 'required|min:3|max:255|email|unique:users',
             ],
             'password' => [
-                'formType'          => 'create|edit',
-                'fieldComponent'    => 'passwordField',
-                'fieldType'         => 'password',
-                'label'             => trans('words.password'),
-                'rules'             => 'required|min:5|max:30|confirmed',
+                'formType'              => 'create|edit',
+                'fieldComponent'        => 'passwordField',
+                'fieldType'             => 'password',
+                'label'                 => trans('words.password'),
+                'rules'                 => 'required|min:5|max:30|confirmed',
             ],
-            'password_confirmation' => [
-                'formType'          => 'create|edit',
-                'fieldComponent'    => 'passwordField',
-                'fieldType'         => 'password',
-                'label'             => trans('words.password_confirmation'),
+            'password_confirmation'     => [
+                'formType'              => 'create|edit',
+                'fieldComponent'        => 'passwordField',
+                'fieldType'             => 'password',
+                'label'                 => trans('words.password_confirmation'),
             ],
         ];
 
@@ -65,23 +62,17 @@ class UserRegisterForm extends BaseForm
         ];
     }
 
-    public function formClass()
+    public function formClasses()
     {
-        return [
-            'create' => 'form-horizontal',
-            'edit' => 'form-horizontal',
-        ];
+        return ['form-horizontal'];
     }
 
     public function formAttributes()
     {
-        return [
-            'edit' => ['jo', 'ne', 'pole' => 261],
-            'create' => ['form-horizontal'],
-        ];
+        return ['custom_attr' => 100];
     }
 
-    public function submitButtonText($formType)
+    public function submitButtonText()
     {
         return [
             'create' => trans('words.create_account'),
@@ -89,8 +80,18 @@ class UserRegisterForm extends BaseForm
         ];
     }
 
-    public function dataRemote($formType)
+    public function commonFieldRootClasses()
     {
-        return false;
+        return ['col-md-6'];
+    }
+
+    public function commonFieldRootAttributes()
+    {
+        return ['test_attribute' => 'hscomputers'];
+    }
+
+    public function dataRemote()
+    {
+        return true;
     }
 }

@@ -19,10 +19,6 @@
                             {{ trans('phrases.this_form_contains_no_entries') }}
                         </div>
                     @endif
-
-                    <div clo =6{{}}</div>
-                    <div clo =6</div>
-
                 </div>
             </div>
         </div>
