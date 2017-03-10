@@ -82,12 +82,12 @@ class UserRegisterForm extends BaseForm
 
     public function commonFieldRootClasses()
     {
-        return ['col-md-6'];
+        return ['col-md-12'];
     }
 
     public function commonFieldRootAttributes()
     {
-        return ['test_attribute' => 'hscomputers'];
+        return ['custom_attribute' => 'custom_value'];
     }
 
     public function dataRemote()
