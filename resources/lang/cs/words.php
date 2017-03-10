@@ -14,6 +14,7 @@ return [
     'create_account'                => 'Vytvořit účet',
     'email'                         => 'Email',
     'first_name'                    => 'Jméno',
+    'in_progress...'                => 'Zpracovávám...',
     'last_name'                     => 'Příjmení',
     'password'                      => 'Heslo',
     'password_confirmation'         => 'Potvrzení hesla',

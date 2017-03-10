@@ -12,7 +12,9 @@ window.Project = {
     initComponents: function()
     {
         $.each(Project.Components, function(index, component) {
-            console.log(index);
+            if (Server.appConfig.debug) {
+                console.log('Loaded component: ' + index);
+            }
             if( $.isFunction( component.init ) ){
                 component.init();
             } 

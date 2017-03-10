@@ -21,5 +21,10 @@ require('./bootstrap');
 
 require('./hscomponents/project');
 require('./hscomponents/flashMessenger/flashMessenger');
+require('./hscomponents/ajax/ajax');
+require('./hscomponents/ajax/ajaxLoader');
+require('./hscomponents/form/formErrorsHandler');
+require('./hscomponents/subscriber/subscriber');
+require('./hscomponents/swalHandler/swalHandler');
 
 require('./hscomponents/promiseHack/promise');

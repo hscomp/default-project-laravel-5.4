@@ -18,7 +18,7 @@ class UserRegisterForm extends BaseForm
                 'fieldType'             => 'text',
                 'label'                 => trans('words.first_name'),
                 'attributes'            => ['class' => 'form-control custom-class', 'placeholder' => 'Vložte jméno'],
-                'fieldRootClasses'      => ['col-md-12', 'custom-class'],
+                'fieldRootClasses'      => ['custom-class'],
                 'fieldRootAttributes'   => ['jmeno' => 'zavicak'],
                 'rules'                 => 'required|min:2|max:50|name_characters',
             ],
@@ -69,7 +69,7 @@ class UserRegisterForm extends BaseForm
 
     public function formAttributes()
     {
-        return ['custom_attr' => 100];
+        return ['data-preloader' => trans('words.in_progress...')];
     }
 
     public function submitButtonText()

@@ -12,6 +12,12 @@ Project.Components.Ajax = {
      */
     setAjaxSetup: function()
     {
+        // jQuery
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
+        });
+
+        //
         window.axios.defaults.headers.common = {
             'X-CSRF-TOKEN': window.Laravel.csrfToken,
             'X-Requested-With': 'XMLHttpRequest'
@@ -69,7 +75,7 @@ Project.Components.Ajax = {
         }
 
         if(form.attr('data-preloader')) {
-            Project.Components.AjaxLoader.show(form);
+            Project.Components.AjaxLoader.show(form, form.attr('data-preloader'));
         }
 
         $.publish(subscribers, {
@@ -91,6 +97,10 @@ Project.Components.Ajax = {
             },
             error: function(data)
             {
+                if(form.attr('data-remote')) {
+                    Project.Components.FormErrorsHandler.showErrors(data.responseJSON, form);
+                }
+
                 $.publish(subscribers, {
                     _type: 'done',
                     data: data.responseJSON
