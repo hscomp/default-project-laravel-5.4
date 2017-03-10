@@ -92,6 +92,6 @@ class UserRegisterForm extends BaseForm
 
     public function dataRemote()
     {
-        return true;
+        return false;
     }
 }
