@@ -6,6 +6,7 @@ use App\Notifications\Auth\SendUserRegistrationActivationLink;
 use App\Notifications\Auth\SendUserSuccessfulActivationConfirmation;
 use App\Repositories\Auth\UserActivationRepository;
 use App\Services\BaseService;
+use Carbon\Carbon;
 use DB;
 
 class EmailActivationService extends BaseService
@@ -67,6 +68,13 @@ class EmailActivationService extends BaseService
         $this->sendActivationConfirmationMail($user);
 
         return $user;
+    }
+
+    public function activateUserForce(User $user)
+    {
+        $user->activated_at = Carbon::now();
+
+        $user->save();
     }
 
     private function shouldSend(User $user)

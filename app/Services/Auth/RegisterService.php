@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Auth;
 
+use App\Helpers\Helper;
 use App\Models\User;
 use App\Services\BaseService;
 
@@ -19,7 +20,11 @@ class RegisterService extends BaseService
 
     protected function create(Array $data)
     {
-        return User::create($data);
+        $user = User::create($data);
+
+        Helper::clock(['User successful created', 'user' => $user]);
+
+        return $user;
     }
 
 }

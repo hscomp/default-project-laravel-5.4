@@ -2,11 +2,43 @@
 
 namespace App\Traits;
 
+use App\Alerts\AlertException;
 use App\Helpers\Helper;
 use App\Utilities\FlashMessenger;
 
 trait Notifiable
 {
+    /**
+     * Alert instance.
+     *
+     * @var mixed
+     */
+    protected $alertInstance;
+
+    /**
+     * Prepare new or cached alert instance.
+     * @return mixed
+     * @throws AlertException
+     */
+    public function alert()
+    {
+//        if (config('registration.email_activation.user')) {
+//            $this->sendAlert(trans('responsemessages.registration.user.registration_success_with_activation_link'));
+//        } else {
+//            $this->sendAlert(trans('responsemessages.registration.user.registration_success'));
+//        }
+
+        if (!isset($this->alert) or !class_exists($this->alert)) {
+            throw new AlertException('Please set the $alert property to your alert caller');
+        }
+
+        if (!$this->alertInstance) {
+            $this->alertInstance = new $this->alert($this);
+        }
+
+        return $this->alertInstance;
+    }
+
     /**
      * Send javascript alert to output
      * @param type $alert - key in recources/lang/flash.php

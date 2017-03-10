@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Alerts\Auth\UserRegisterAlert;
 use App\Events\UserRegistered;
 use App\Forms\UserRegisterForm;
-use App\Helpers\Helper;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Services\Auth\EmailActivationService;
 use App\Services\Auth\RegisterService;
 use App\Traits\Notifiable;
-use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +26,7 @@ class RegisterController extends BaseController
     |
     */
 
-    use RedirectsUsers, Notifiable;
+    use RedirectsUsers;
 
     /**
      * Where to redirect users after registration.
@@ -42,6 +41,11 @@ class RegisterController extends BaseController
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function alert()
+    {
+        return $this->alert = $this->alert ?: new UserRegisterAlert();
     }
 
     /**
@@ -73,20 +77,13 @@ class RegisterController extends BaseController
     ) {
         $user = $registerService->register($request->all());
 
-        Helper::clock(['user' => $user]);
-
         if (config('registration.email_activation.user')) {
             $activationService->createActivation($user);
         } else {
-            $user->activated_at = Carbon::now();
-            $user->save();
+            $activationService->activateUserForce($user);
         }
 
-        if (config('registration.email_activation.user')) {
-            $this->sendAlert(trans('responsemessages.registration.user.registration_success_with_activation_link'));
-        } else {
-            $this->sendAlert(trans('responsemessages.registration.user.registration_success'));
-        }
+        $this->alert()->userSuccessfullyRegistered();
 
         if (config('registration.instant_login.user') && !config('registration.email_activation.user')) {
             $this->guard()->login($user);
