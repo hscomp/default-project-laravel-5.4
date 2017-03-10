@@ -9,7 +9,7 @@ return [
     |
     | If the email activation is enabled, activation email will be sent to
     | registered user. You can format email structure in view folder. You can
-    | define more registration types, user object is default.
+    | define more registration types, "user" object is default.
     */
 
     'email_activation' => [
@@ -23,7 +23,7 @@ return [
     |
     | If the instant login is enabled, user is logged immediately after success
     | registration. Value is ignored, when is enabled email activation. You can
-    | define more registration types, user object is default.
+    | define more registration types, "user" object is default.
     */
 
     'instant_login' => [
