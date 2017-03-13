@@ -1,6 +1,6 @@
 Project.Components.Ajax = {
 
-    init: function() {
+    init: function () {
 
         this.setAjaxSetup();
 
@@ -10,11 +10,10 @@ Project.Components.Ajax = {
     /**
      * Global Ajax setup.
      */
-    setAjaxSetup: function()
-    {
+    setAjaxSetup: function () {
         // jQuery
         $.ajaxSetup({
-            headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken}
         });
 
         //
@@ -25,21 +24,21 @@ Project.Components.Ajax = {
 
     },
 
-    initGlobalListeners: function() {
+    initGlobalListeners: function () {
 
         var self = this;
 
         /**
          * Forms marked with the "data-remote" attribute will submit, via AJAX.
          */
-        $(document).on('submit', 'form[data-remote]', function(e) {
+        $(document).on('submit', 'form[data-remote]', function (e) {
             self.submitAjaxRequest($(this), e);
         });
 
         /**
          *  The "data-click-submits-form" attribute immediately submits the form on change.
          */
-        $(document).on('click', '*[data-click-submits-form]', function() {
+        $(document).on('click', '*[data-click-submits-form]', function () {
             $(this).closest('form').submit();
         });
 
@@ -48,8 +47,8 @@ Project.Components.Ajax = {
     /**
      * Form ajax handler.
      */
-    submitAjaxRequest: function(that, e) {
-        var form = $(that);
+    submitAjaxRequest: function (form, e) {
+        var form = $(form);
         var method = form.prop('method');
         var url = form.prop('action');
         var subscribers = form.data('subscribers');
@@ -60,10 +59,9 @@ Project.Components.Ajax = {
 
         e.preventDefault();
 
-        if (dataType == 'files')
-        {
+        if (dataType == 'files') {
             var data = new FormData();
-            $(form).find('input,select,textarea').each(function() {
+            $(form).find('input,select,textarea').each(function () {
                 var inp = $(this);
                 if (inp[0].files != null) {
                     var _content = inp[0].files[0];
@@ -74,7 +72,7 @@ Project.Components.Ajax = {
             });
         }
 
-        if(form.attr('data-preloader')) {
+        if (form.attr('data-preloader')) {
             Project.Components.AjaxLoader.show(form, form.attr('data-preloader'));
         }
 
@@ -89,15 +87,17 @@ Project.Components.Ajax = {
             dataType: 'json',
             contentType: dataType == 'files' ? false : 'application/x-www-form-urlencoded; charset=UTF-8',
             processData: dataType == 'files' ? false : true,
-            success: function(data) {
+            success: function (data) {
                 $.publish(subscribers, {
                     _type: 'done',
                     data: data
                 });
+                if (typeof data.ajaxResponse != 'undefined') {
+                    Project.Components.Ajax.responseHandler(data.ajaxResponse);
+                }
             },
-            error: function(data)
-            {
-                if(form.attr('data-remote')) {
+            error: function (data) {
+                if (form.attr('data-remote')) {
                     Project.Components.FormErrorsHandler.showErrors(data.responseJSON, form);
                 }
 
@@ -107,66 +107,53 @@ Project.Components.Ajax = {
                 });
 
             },
-            complete: function()
-            {
-                if(form.attr('data-preloader')) {
+            complete: function () {
+                if (form.attr('data-preloader')) {
                     Project.Components.AjaxLoader.hide(form);
                 }
             }
         });
     },
-    
-    commonResponseHandler: function(response, subscriber) {
 
-        var alerting = false;
-        var timeout = 0;
+    responseHandler: function (data) {
 
-        var alerts = {};
-        var redirect = '';
-        if (typeof response.data._alerts != "undefined") {
-            var alerts = response.data._alerts;
-        }
-        if (typeof response._alerts != "undefined") {
-            var alerts = response._alerts;
-        }
-        if (typeof response.data._redirect != "undefined") {
-            var redirect = response.data._redirect;
-        }
-        if (typeof response._redirect != "undefined") {
-            var redirect = response._redirect;
-        }
+        var stopRedirect = false;
 
-        if ( alerts != {} ) {
-            $.each(alerts, function(key, alert) {
-                alerting = true;
-                timeout = timeout + 2500;
-                swal({
-                    title: alert.title,
-                    text : alert.text,
-                    type:  alert.type,
-                    confirmButtonText: 'OK'
-                });
-            });
-        }
-
-        if (redirect != '') {
-            if (redirect != -1) {
-                if (alerting) {
-                    window.setTimeout(function() {
-                        location.href = redirect;
-                    }, timeout);
-                } else {
-                    location.href = redirect;
-                }
+        if (typeof data.alert != 'undefined' && data.alert) {
+            stopRedirect = true;
+            var alertData = data.alert.data;
+            switch (data.alert.driver) {
+                case 'swal':
+                    swal(alertData)
+                        .then(function () {
+                            if (typeof data.redirect != "undefined" && data.redirect) {
+                                location.href = data.redirect;
+                            }
+                        }, function (dismiss) {
+                            if (typeof data.redirect != "undefined" && data.redirect) {
+                                location.href = data.redirect;
+                            }
+                        });
+                    break;
+                case 'vex':
+                    alertData.afterClose = function () {
+                        if (typeof data.redirect != "undefined" && data.redirect) {
+                            location.href = data.redirect;
+                        }
+                    }
+                    vex.open(alertData);
+                    break;
             }
         }
 
-        if (typeof subscriber == "undefined") {
-            return;
+        if (typeof data.notifications != 'undefined' && data.notifications) {
+            stopRedirect = true;
+            // @todo Add notification processing
         }
 
-        var form = $('form[data-subscribers="'+subscriber+'"]');
+        if (!stopRedirect && typeof data.redirect != "undefined") {
+            location.href = data.redirect;
+        }
 
-        Project.Components.FormErrorsHandler.showErrors(response, form);
     }
 }

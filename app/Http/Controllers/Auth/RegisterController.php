@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Alerts\Auth\UserRegisterAlert;
 use App\Events\UserRegistered;
 use App\Forms\UserRegisterForm;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Services\Auth\EmailActivationService;
 use App\Services\Auth\RegisterService;
-use App\Traits\Notifiable;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,16 +41,11 @@ class RegisterController extends BaseController
         $this->middleware('guest');
     }
 
-    public function alert()
-    {
-        return $this->alert = $this->alert ?: new UserRegisterAlert();
-    }
-
     /**
      * Show the application registration form.
      *
-     * @param UserRegisterForm $userRegisterForm
      * @return \Illuminate\Http\Response
+     * @internal param UserRegisterForm $userRegisterForm
      */
     public function showRegistrationForm()
     {
@@ -83,15 +76,23 @@ class RegisterController extends BaseController
             $activationService->activateUserForce($user);
         }
 
-        $this->alert()->userSuccessfullyRegistered();
-
         if (config('registration.instant_login.user') && !config('registration.email_activation.user')) {
             $this->guard()->login($user);
         }
 
         event(new UserRegistered($user));
 
-        return redirect($this->redirectPath());
+        if (config('registration.email_activation.user')) {
+            $this->sendAlert(trans('responsemessages.registration.user.registration_success_with_activation_link'));
+        } else {
+            $this->sendAlert(trans('responsemessages.registration.user.registration_success'));
+        }
+
+        if (request()->wantsJson()) {
+            return $this->ajaxResponse([], $this->redirectPath());
+        } else {
+            return redirect($this->redirectPath());
+        }
     }
 
     public function activate($token)
