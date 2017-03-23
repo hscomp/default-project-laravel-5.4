@@ -18,6 +18,10 @@ Project.Components.FormErrorsHandler = {
 
         this.removeErrors(form);
 
+        if (typeof errors == 'undefined') {
+            return;
+        }
+
         $.each(errors, function (name, messages) {
 
             fieldElement = form.find('#' + name + '_field');

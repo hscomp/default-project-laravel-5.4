@@ -17,6 +17,9 @@
     "vue": "^2.1.10"
   },
   "dependencies": {
+    "animate.css": "^3.5.2",
+    "font-awesome": "github:fortawesome/Font-Awesome",
+    "hover.css": "^2.0.2",
     "sweetalert2": "^6.4.2",
     "vex-js": "^3.1.0"
   }
